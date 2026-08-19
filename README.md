@@ -2,7 +2,7 @@
 
 A free, no-code tool for building consistent UTM tracking links. Instead of typing UTM parameters by hand (a common source of messy, inconsistent attribution data), marketers choose from an approved, editable list of values — and can save recurring parameter sets as presets by campaign type.
 
-**[Try it live →](#)** *(replace with your GitHub Pages link once enabled)*
+**[Try it live →](https://mollypw.github.io/UTM-Link-Builder/)**
 
 ---
 

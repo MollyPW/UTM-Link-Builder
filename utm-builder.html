@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UTM Link Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F4F6F8;
+    --surface:#FFFFFF;
+    --surface-alt:#ECEFF3;
+    --line:#DCE1E8;
+    --ink:#161B22;
+    --ink-soft:#5B6472;
+    --accent:#2D5BFF;
+    --accent-soft:#E5EBFF;
+    --amber:#C97A1A;
+    --amber-soft:#FBEBD4;
+    --success:#1B8F5A;
+    --success-soft:#DEF3E9;
+    --danger:#D14343;
+    --danger-soft:#FBE4E2;
+    --purple:#8A3FD1;
+    --purple-soft:#F1E4FB;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:40px 20px 80px;}
+  h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:28px;
+    font-weight:700;
+    margin:0 0 4px;
+    letter-spacing:-0.01em;
+  }
+  .sub{color:var(--ink-soft);font-size:14.5px;margin:0 0 32px;line-height:1.5;}
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:22px 24px;
+    margin-bottom:18px;
+  }
+  .card h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:15px;
+    font-weight:600;
+    margin:0 0 4px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .step-num{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:20px;height:20px;
+    border-radius:50%;
+    background:var(--accent);
+    color:#fff;
+    font-size:11px;
+    font-weight:600;
+    font-family:'Inter',sans-serif;
+    flex-shrink:0;
+  }
+  .card p.hint{color:var(--ink-soft);font-size:13px;margin:0 0 16px;line-height:1.5;}
+  label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:6px;
+    color:var(--ink);
+  }
+  label .opt{font-weight:400;color:var(--ink-soft);}
+  .field{margin-bottom:16px;}
+  .field:last-child{margin-bottom:0;}
+  input[type=text], select{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    background:var(--surface);
+    color:var(--ink);
+    appearance:none;
+  }
+  select{
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%235B6472'/></svg>");
+    background-repeat:no-repeat;
+    background-position:right 14px center;
+    padding-right:32px;
+  }
+  input:focus, select:focus{
+    outline:none;
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px var(--accent-soft);
+  }
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media (max-width:560px){.row2{grid-template-columns:1fr;}}
+  .tag-dot{width:8px;height:8px;border-radius:2px;display:inline-block;margin-right:7px;}
+  .btn{
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:13.5px;
+    padding:10px 16px;
+    border-radius:8px;
+    border:1px solid transparent;
+    cursor:pointer;
+    transition:transform .05s ease;
+  }
+  .btn:active{transform:scale(0.98);}
+  .btn-primary{background:var(--ink);color:#fff;}
+  .btn-primary:hover{background:#000;}
+  .btn-ghost{background:var(--surface);color:var(--ink);border-color:var(--line);}
+  .btn-ghost:hover{background:var(--surface-alt);}
+  .btn-danger{background:var(--danger-soft);color:var(--danger);border-color:transparent;}
+  .btn-danger:hover{background:#f7cfcb;}
+  .btn-sm{padding:6px 10px;font-size:12px;border-radius:6px;}
+  .actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;}
+  .output-box{
+    background:var(--ink);
+    color:#E9EDF5;
+    border-radius:8px;
+    padding:16px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
+    line-height:1.6;
+    word-break:break-all;
+    margin-bottom:14px;
+    position:relative;
+  }
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px;}
+  .chip{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:12px;
+    font-family:'IBM Plex Mono',monospace;
+    padding:5px 10px;
+    border-radius:20px;
+    border:1px solid transparent;
+  }
+  .chip b{font-weight:600;}
+  .empty-state{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:13px;
+    padding:14px 0;
+  }
+  .warn{
+    background:var(--amber-soft);
+    color:#8A5613;
+    border-radius:8px;
+    padding:10px 12px;
+    font-size:13px;
+    margin-bottom:14px;
+    display:none;
+  }
+  .warn.show{display:block;}
+  .copy-confirm{
+    color:var(--success);
+    font-size:12.5px;
+    font-weight:600;
+    margin-left:10px;
+    opacity:0;
+    transition:opacity .15s ease;
+  }
+  .copy-confirm.show{opacity:1;}
+  details{margin-bottom:18px;}
+  details > summary{
+    cursor:pointer;
+    list-style:none;
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:14.5px;
+    padding:14px 24px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  details[open] > summary{border-radius:var(--radius) var(--radius) 0 0;border-bottom:none;}
+  details > summary::-webkit-details-marker{display:none;}
+  summary .arrow{transition:transform .15s ease;color:var(--ink-soft);font-size:12px;}
+  details[open] summary .arrow{transform:rotate(90deg);}
+  .details-body{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-top:none;
+    border-radius:0 0 var(--radius) var(--radius);
+    padding:20px 24px;
+  }
+  .manage-group{margin-bottom:22px;}
+  .manage-group:last-child{margin-bottom:0;}
+  .manage-group h3{
+    font-size:12.5px;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+    margin:0 0 10px;
+    display:flex;
+    align-items:center;
+  }
+  .option-list{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
+  .option-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    background:var(--surface-alt);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:5px 6px 5px 12px;
+    font-size:13px;
+    font-family:'IBM Plex Mono',monospace;
+  }
+  .option-pill button{
+    border:none;
+    background:none;
+    color:var(--ink-soft);
+    cursor:pointer;
+    width:18px;height:18px;
+    border-radius:50%;
+    font-size:13px;
+    line-height:1;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .option-pill button:hover{background:var(--danger-soft);color:var(--danger);}
+  .add-row{display:flex;gap:8px;}
+  .add-row input{flex:1;}
+  .preset-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:10px 0;
+    border-bottom:1px solid var(--line);
+    gap:12px;
+  }
+  .preset-row:last-child{border-bottom:none;}
+  .preset-name{font-weight:600;font-size:14px;}
+  .preset-fields{font-size:12px;color:var(--ink-soft);font-family:'IBM Plex Mono',monospace;margin-top:2px;}
+  .preset-actions{display:flex;gap:6px;flex-shrink:0;}
+  .footnote{font-size:12px;color:var(--ink-soft);text-align:center;margin-top:28px;line-height:1.6;}
+  .footnote a{color:var(--ink-soft);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>UTM Link Builder</h1>
+  <p class="sub">Build campaign links from an approved list of values, so attribution reporting stays clean and consistent.</p>
+
+  <!-- STEP 1: PRESET -->
+  <div class="card">
+    <h2><span class="step-num">1</span>Start from a campaign type (optional)</h2>
+    <p class="hint">Pick a saved preset to auto-fill the fields below. You can still change anything after.</p>
+    <div class="field">
+      <select id="presetSelect">
+        <option value="">— No preset, start blank —</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- STEP 2: FIELDS -->
+  <div class="card">
+    <h2><span class="step-num">2</span>Build the link</h2>
+    <p class="hint">Destination URL, then choose from the approved values for each parameter.</p>
+
+    <div class="field">
+      <label for="destUrl">Destination URL</label>
+      <input type="text" id="destUrl" placeholder="https://www.example.com/landing-page">
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label for="sel_source"><span class="tag-dot" style="background:var(--accent)"></span>Source <span class="opt">(required)</span></label>
+        <select id="sel_source"></select>
+      </div>
+      <div class="field">
+        <label for="sel_medium"><span class="tag-dot" style="background:var(--success)"></span>Medium <span class="opt">(required)</span></label>
+        <select id="sel_medium"></select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="sel_campaign"><span class="tag-dot" style="background:var(--amber)"></span>Campaign <span class="opt">(required)</span></label>
+      <select id="sel_campaign"></select>
+    </div>
+
+    <div class="field">
+      <label for="sel_content"><span class="tag-dot" style="background:var(--purple)"></span>Content / link location <span class="opt">(optional — use this to tell apart multiple links to the same URL, e.g. header-cta vs. footer-link)</span></label>
+      <select id="sel_content"></select>
+    </div>
+
+    <div class="field">
+      <label for="sel_term"><span class="tag-dot" style="background:var(--danger)"></span>Term <span class="opt">(optional — usually just for paid search keywords)</span></label>
+      <select id="sel_term"></select>
+    </div>
+
+    <div class="warn" id="warnBox"></div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="generateBtn">Generate link</button>
+      <button class="btn btn-ghost" id="savePresetBtn">Save these values as a preset</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: OUTPUT -->
+  <div class="card" id="outputCard" style="display:none;">
+    <h2><span class="step-num">3</span>Your link</h2>
+    <div class="output-box" id="outputUrl"></div>
+    <div class="chips" id="outputChips"></div>
+    <div class="actions" style="margin-top:14px;">
+      <button class="btn btn-primary" id="copyBtn">Copy link</button>
+      <span class="copy-confirm" id="copyConfirm">Copied ✓</span>
+    </div>
+  </div>
+
+  <!-- MANAGE OPTIONS -->
+  <details id="manageOptions">
+    <summary>Manage approved values <span class="arrow">▶</span></summary>
+    <div class="details-body" id="manageOptionsBody"></div>
+  </details>
+
+  <!-- MANAGE PRESETS -->
+  <details id="managePresets">
+    <summary>Manage saved presets <span class="arrow">▶</span></summary>
+    <div class="details-body">
+      <div id="presetListBody"></div>
+    </div>
+  </details>
+
+  <p class="footnote">Values are saved in this browser only (localStorage), so they won't automatically appear on another computer or for a teammate unless you're the only one using this copy.</p>
+</div>
+
+<script>
+// ---------- Config ----------
+const FIELDS = [
+  {key:'source',   label:'Source',   color:'var(--accent)',  soft:'var(--accent-soft)',  required:true},
+  {key:'medium',   label:'Medium',   color:'var(--success)', soft:'var(--success-soft)', required:true},
+  {key:'campaign', label:'Campaign', color:'var(--amber)',   soft:'var(--amber-soft)',   required:true},
+  {key:'content',  label:'Content',  color:'var(--purple)',  soft:'var(--purple-soft)',  required:false},
+  {key:'term',     label:'Term',     color:'var(--danger)',  soft:'var(--danger-soft)',  required:false},
+];
+
+const DEFAULT_OPTIONS = {
+  source:   ['newsletter','facebook','linkedin','google','twitter','partner-site','website'],
+  medium:   ['email','social','cpc','organic','referral','display','affiliate'],
+  campaign: ['spring-sale','product-launch','landing-page-launch','webinar-2026'],
+  content:  ['header-cta','body-link-1','body-link-2','footer-link','sidebar-banner','ps-line'],
+  term:     []
+};
+
+const DEFAULT_PRESETS = [
+  {name:'New landing page', source:'website', medium:'referral', campaign:'landing-page-launch', content:'', term:''},
+  {name:'Email newsletter',  source:'newsletter', medium:'email', campaign:'', content:'header-cta', term:''}
+];
+
+// ---------- Storage helpers (plain localStorage — see footnote in UI) ----------
+const OPT_KEY = 'utm_builder_options_v1';
+const PRESET_KEY = 'utm_builder_presets_v1';
+
+function loadOptions(){
+  try{
+    const raw = localStorage.getItem(OPT_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  localStorage.setItem(OPT_KEY, JSON.stringify(DEFAULT_OPTIONS));
+  return JSON.parse(JSON.stringify(DEFAULT_OPTIONS));
+}
+function saveOptions(opts){ localStorage.setItem(OPT_KEY, JSON.stringify(opts)); }
+
+function loadPresets(){
+  try{
+    const raw = localStorage.getItem(PRESET_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  localStorage.setItem(PRESET_KEY, JSON.stringify(DEFAULT_PRESETS));
+  return JSON.parse(JSON.stringify(DEFAULT_PRESETS));
+}
+function savePresets(p){ localStorage.setItem(PRESET_KEY, JSON.stringify(p)); }
+
+let options = loadOptions();
+let presets = loadPresets();
+
+// ---------- Utility ----------
+function slugify(str){
+  return str.trim().toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9\-_.]/g,'');
+}
+
+// ---------- Render: field selects ----------
+function renderFieldSelects(){
+  FIELDS.forEach(f=>{
+    const sel = document.getElementById('sel_'+f.key);
+    const current = sel.value;
+    sel.innerHTML = '';
+    const blankLabel = f.required ? '— choose ' + f.label.toLowerCase() + ' —' : '— none —';
+    sel.appendChild(new Option(blankLabel, ''));
+    options[f.key].forEach(v=>{
+      sel.appendChild(new Option(v, v));
+    });
+    if([...sel.options].some(o=>o.value===current)) sel.value = current;
+  });
+}
+
+// ---------- Render: preset dropdown ----------
+function renderPresetSelect(){
+  const sel = document.getElementById('presetSelect');
+  sel.innerHTML = '<option value="">— No preset, start blank —</option>';
+  presets.forEach((p,i)=>{
+    sel.appendChild(new Option(p.name, i));
+  });
+}
+
+document.getElementById('presetSelect').addEventListener('change', (e)=>{
+  if(e.target.value === '') return;
+  const p = presets[e.target.value];
+  FIELDS.forEach(f=>{
+    if(p[f.key]){
+      document.getElementById('sel_'+f.key).value = p[f.key];
+    }
+  });
+});
+
+// ---------- Generate link ----------
+function showWarn(msg){
+  const w = document.getElementById('warnBox');
+  w.textContent = msg;
+  w.classList.add('show');
+}
+function hideWarn(){
+  document.getElementById('warnBox').classList.remove('show');
+}
+
+document.getElementById('generateBtn').addEventListener('click', ()=>{
+  hideWarn();
+  const dest = document.getElementById('destUrl').value.trim();
+  if(!dest){ showWarn('Add a destination URL first.'); return; }
+  if(!/^https?:\/\//i.test(dest)){ showWarn('Destination URL should start with http:// or https://'); return; }
+
+  const missing = FIELDS.filter(f=>f.required && !document.getElementById('sel_'+f.key).value);
+  if(missing.length){
+    showWarn('Choose a value for: ' + missing.map(f=>f.label).join(', '));
+    return;
+  }
+
+  let url;
+  try{ url = new URL(dest); } catch(e){ showWarn('That destination URL doesn\'t look valid.'); return; }
+
+  const values = {};
+  FIELDS.forEach(f=>{
+    const v = document.getElementById('sel_'+f.key).value;
+    if(v){
+      url.searchParams.set('utm_'+f.key, v);
+      values[f.key] = v;
+    }
+  });
+
+  document.getElementById('outputCard').style.display = 'block';
+  document.getElementById('outputUrl').textContent = url.toString();
+
+  const chipsBox = document.getElementById('outputChips');
+  chipsBox.innerHTML = '';
+  FIELDS.forEach(f=>{
+    if(values[f.key]){
+      const chip = document.createElement('span');
+      chip.className = 'chip';
+      chip.style.background = f.soft;
+      chip.style.color = f.color;
+      chip.innerHTML = '<b>utm_'+f.key+'</b>=' + values[f.key];
+      chipsBox.appendChild(chip);
+    }
+  });
+
+  document.getElementById('outputCard').scrollIntoView({behavior:'smooth', block:'nearest'});
+});
+
+document.getElementById('copyBtn').addEventListener('click', ()=>{
+  const text = document.getElementById('outputUrl').textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const c = document.getElementById('copyConfirm');
+    c.classList.add('show');
+    setTimeout(()=>c.classList.remove('show'), 1600);
+  }).catch(()=>{ showWarn('Could not copy automatically — select and copy the link text manually.'); });
+});
+
+// ---------- Save preset ----------
+document.getElementById('savePresetBtn').addEventListener('click', ()=>{
+  const name = prompt('Name this preset (e.g. "Landing page launch"):');
+  if(!name) return;
+  const preset = {name: name.trim()};
+  FIELDS.forEach(f=>{ preset[f.key] = document.getElementById('sel_'+f.key).value; });
+  presets.push(preset);
+  savePresets(presets);
+  renderPresetSelect();
+  renderPresetManageList();
+});
+
+// ---------- Manage options ----------
+function renderManageOptions(){
+  const body = document.getElementById('manageOptionsBody');
+  body.innerHTML = '';
+  FIELDS.forEach(f=>{
+    const group = document.createElement('div');
+    group.className = 'manage-group';
+
+    const h3 = document.createElement('h3');
+    h3.innerHTML = '<span class="tag-dot" style="background:'+f.color+'"></span>' + f.label;
+    group.appendChild(h3);
+
+    const list = document.createElement('div');
+    list.className = 'option-list';
+    if(options[f.key].length === 0){
+      const empty = document.createElement('span');
+      empty.className = 'empty-state';
+      empty.style.padding = '0';
+      empty.textContent = 'No values yet.';
+      list.appendChild(empty);
+    }
+    options[f.key].forEach(val=>{
+      const pill = document.createElement('span');
+      pill.className = 'option-pill';
+      const label = document.createElement('span');
+      label.textContent = val;
+      pill.appendChild(label);
+      const rm = document.createElement('button');
+      rm.textContent = '×';
+      rm.title = 'Remove';
+      rm.addEventListener('click', ()=>{
+        options[f.key] = options[f.key].filter(v=>v!==val);
+        saveOptions(options);
+        renderManageOptions();
+        renderFieldSelects();
+      });
+      pill.appendChild(rm);
+      list.appendChild(pill);
+    });
+    group.appendChild(list);
+
+    const addRow = document.createElement('div');
+    addRow.className = 'add-row';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = 'Add a new ' + f.label.toLowerCase() + ' value…';
+    const addBtn = document.createElement('button');
+    addBtn.className = 'btn btn-ghost btn-sm';
+    addBtn.textContent = 'Add';
+    const doAdd = ()=>{
+      const v = slugify(input.value);
+      if(!v) return;
+      if(options[f.key].includes(v)){ input.value=''; return; }
+      options[f.key].push(v);
+      saveOptions(options);
+      input.value = '';
+      renderManageOptions();
+      renderFieldSelects();
+    };
+    addBtn.addEventListener('click', doAdd);
+    input.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); doAdd(); }});
+    addRow.appendChild(input);
+    addRow.appendChild(addBtn);
+    group.appendChild(addRow);
+
+    body.appendChild(group);
+  });
+}
+
+// ---------- Manage presets ----------
+function renderPresetManageList(){
+  const body = document.getElementById('presetListBody');
+  body.innerHTML = '';
+  if(presets.length === 0){
+    body.innerHTML = '<div class="empty-state">No presets saved yet. Build a link above and use "Save these values as a preset".</div>';
+    return;
+  }
+  presets.forEach((p,i)=>{
+    const row = document.createElement('div');
+    row.className = 'preset-row';
+
+    const left = document.createElement('div');
+    const nameEl = document.createElement('div');
+    nameEl.className = 'preset-name';
+    nameEl.textContent = p.name;
+    const fieldsEl = document.createElement('div');
+    fieldsEl.className = 'preset-fields';
+    fieldsEl.textContent = FIELDS.filter(f=>p[f.key]).map(f=>'utm_'+f.key+'='+p[f.key]).join('  ');
+    left.appendChild(nameEl);
+    left.appendChild(fieldsEl);
+
+    const actions = document.createElement('div');
+    actions.className = 'preset-actions';
+    const delBtn = document.createElement('button');
+    delBtn.className = 'btn btn-danger btn-sm';
+    delBtn.textContent = 'Delete';
+    delBtn.addEventListener('click', ()=>{
+      if(!confirm('Delete preset "'+p.name+'"?')) return;
+      presets.splice(i,1);
+      savePresets(presets);
+      renderPresetSelect();
+      renderPresetManageList();
+    });
+    actions.appendChild(delBtn);
+
+    row.appendChild(left);
+    row.appendChild(actions);
+    body.appendChild(row);
+  });
+}
+
+// ---------- Init ----------
+renderFieldSelects();
+renderPresetSelect();
+renderManageOptions();
+renderPresetManageList();
+</script>
+</body>
+</html>

@@ -253,9 +253,53 @@
   .preset-actions{display:flex;gap:6px;flex-shrink:0;}
   .footnote{font-size:12px;color:var(--ink-soft);text-align:center;margin-top:28px;line-height:1.6;}
   .footnote a{color:var(--ink-soft);}
+  .home-bar{
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #FFFFFF;
+    border-bottom: 1px solid rgba(29,53,87,.16);
+    padding: 12px clamp(16px, 6vw, 24px);
+  }
+  .home-bar a{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #1D3557;
+    font-weight: 700;
+    font-size: 15px;
+    text-decoration: none;
+  }
+  .home-bar a:hover,
+  .home-bar a:focus{
+    text-decoration: underline;
+  }
+  .home-bar svg{
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+  }
 </style>
 </head>
 <body>
+<div class="home-bar">
+  <a href="https://mollypw.github.io/" aria-label="Back to the mollypw.github.io home page">
+    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none" stroke="#C9A227" stroke-width="1">
+      <g stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="119" cy="137" r="99" stroke-width="1.5"></circle>
+        <path d="M74 172 V80 C74 66 90 64 98 76 L120 112 L142 76 C150 64 166 66 166 80 V172" stroke-width="10"></path>
+        <path d="M74 104 H46 M74 133 H58 M74 162 H46" stroke-width="6"></path>
+        <path d="M166 104 H184 C196 104 196 130 184 130 H166" stroke-width="6"></path>
+        <path d="M62 188 C74 212 94 212 104 190 C112 172 128 172 136 190 C146 212 166 212 178 188" stroke-width="6"></path>
+      </g>
+    </svg>
+    Home
+  </a>
+</div>
+
 <div class="wrap">
   <h1>UTM Link Builder</h1>
   <p class="sub">Build campaign links from an approved list of values, so attribution reporting stays clean and consistent.</p>

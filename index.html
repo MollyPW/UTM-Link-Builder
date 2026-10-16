@@ -4,26 +4,41 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UTM Link Builder</title>
+<meta name="description" content="Free UTM campaign link builder that pulls source, medium, campaign, content and term values from an approved list, so your attribution reporting stays clean and consistent.">
+<link rel="icon" type="image/svg+xml" href="https://mollypw.com/assets/images/logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Poppins:wght@600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#F4F6F8;
-    --surface:#FFFFFF;
-    --surface-alt:#ECEFF3;
-    --line:#DCE1E8;
-    --ink:#161B22;
-    --ink-soft:#5B6472;
-    --accent:#2D5BFF;
-    --accent-soft:#E5EBFF;
-    --amber:#C97A1A;
-    --amber-soft:#FBEBD4;
-    --success:#1B8F5A;
-    --success-soft:#DEF3E9;
-    --danger:#D14343;
+    /* Molly's brand tokens — the only colors this build draws from.
+       See the note above .tag-dot for the one documented functional
+       exception (small per-field identity dots). */
+    --navy:#1D3557;
+    --red:#E63946;
+    --steel:#457B9D;
+    --teal:#A8DADC;
+    --offwhite:#F1FAEE;
+    --gold:#C9A227;
+    --white:#FFFFFF;
+
+    /* muted text on the offwhite base (not a white card) — steel fails
+       AA there, so this is navy at reduced opacity instead of a new hue */
+    --navy-soft:rgba(29,53,87,.68);
+    --rule:rgba(29,53,87,.16);
+    --tint:rgba(168,218,220,.30);
+
+    /* aliases kept so the rest of this file reads clearly */
+    --bg:var(--offwhite);
+    --surface:var(--white);
+    --surface-alt:var(--tint);
+    --line:var(--rule);
+    --ink:var(--navy);
+    --ink-soft:var(--navy-soft);
+    --accent:var(--navy);
+    --accent-soft:var(--tint);
+    --danger:var(--red);
     --danger-soft:#FBE4E2;
-    --purple:#8A3FD1;
-    --purple-soft:#F1E4FB;
     --radius:10px;
   }
   *{box-sizing:border-box;}
@@ -31,12 +46,12 @@
     margin:0;
     background:var(--bg);
     color:var(--ink);
-    font-family:'Inter',sans-serif;
+    font-family:'DM Sans',sans-serif;
     -webkit-font-smoothing:antialiased;
   }
   .wrap{max-width:760px;margin:0 auto;padding:40px 20px 80px;}
   h1{
-    font-family:'Space Grotesk',sans-serif;
+    font-family:'Poppins',sans-serif;
     font-size:28px;
     font-weight:700;
     margin:0 0 4px;
@@ -51,7 +66,7 @@
     margin-bottom:18px;
   }
   .card h2{
-    font-family:'Space Grotesk',sans-serif;
+    font-family:'Poppins',sans-serif;
     font-size:15px;
     font-weight:600;
     margin:0 0 4px;
@@ -69,7 +84,7 @@
     color:#fff;
     font-size:11px;
     font-weight:600;
-    font-family:'Inter',sans-serif;
+    font-family:'DM Sans',sans-serif;
     flex-shrink:0;
   }
   .card p.hint{color:var(--ink-soft);font-size:13px;margin:0 0 16px;line-height:1.5;}
@@ -88,14 +103,14 @@
     padding:10px 12px;
     border:1px solid var(--line);
     border-radius:8px;
-    font-family:'Inter',sans-serif;
+    font-family:'DM Sans',sans-serif;
     font-size:14px;
     background:var(--surface);
     color:var(--ink);
     appearance:none;
   }
   select{
-    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%235B6472'/></svg>");
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%231D3557'/></svg>");
     background-repeat:no-repeat;
     background-position:right 14px center;
     padding-right:32px;
@@ -109,7 +124,7 @@
   @media (max-width:560px){.row2{grid-template-columns:1fr;}}
   .tag-dot{width:8px;height:8px;border-radius:2px;display:inline-block;margin-right:7px;}
   .btn{
-    font-family:'Inter',sans-serif;
+    font-family:'DM Sans',sans-serif;
     font-weight:600;
     font-size:13.5px;
     padding:10px 16px;
@@ -120,19 +135,19 @@
   }
   .btn:active{transform:scale(0.98);}
   .btn-primary{background:var(--ink);color:#fff;}
-  .btn-primary:hover{background:#000;}
+  .btn-primary:hover{filter:brightness(1.2);}
   .btn-ghost{background:var(--surface);color:var(--ink);border-color:var(--line);}
   .btn-ghost:hover{background:var(--surface-alt);}
   .btn-danger{background:var(--danger-soft);color:var(--danger);border-color:transparent;}
-  .btn-danger:hover{background:#f7cfcb;}
+  .btn-danger:hover{background:rgba(230,57,70,.18);}
   .btn-sm{padding:6px 10px;font-size:12px;border-radius:6px;}
   .actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;}
   .output-box{
     background:var(--ink);
-    color:#E9EDF5;
+    color:var(--offwhite);
     border-radius:8px;
     padding:16px;
-    font-family:'IBM Plex Mono',monospace;
+    font-family:'DM Mono',monospace;
     font-size:13px;
     line-height:1.6;
     word-break:break-all;
@@ -145,7 +160,7 @@
     align-items:center;
     gap:6px;
     font-size:12px;
-    font-family:'IBM Plex Mono',monospace;
+    font-family:'DM Mono',monospace;
     padding:5px 10px;
     border-radius:20px;
     border:1px solid transparent;
@@ -158,9 +173,10 @@
     padding:14px 0;
   }
   .warn{
-    background:var(--amber-soft);
-    color:#8A5613;
-    border-radius:8px;
+    background:var(--white);
+    color:var(--navy);
+    border-left:3px solid var(--red);
+    border-radius:4px;
     padding:10px 12px;
     font-size:13px;
     margin-bottom:14px;
@@ -168,9 +184,9 @@
   }
   .warn.show{display:block;}
   .copy-confirm{
-    color:var(--success);
+    color:var(--navy);
     font-size:12.5px;
-    font-weight:600;
+    font-weight:700;
     margin-left:10px;
     opacity:0;
     transition:opacity .15s ease;
@@ -180,7 +196,7 @@
   details > summary{
     cursor:pointer;
     list-style:none;
-    font-family:'Space Grotesk',sans-serif;
+    font-family:'Poppins',sans-serif;
     font-weight:600;
     font-size:14.5px;
     padding:14px 24px;
@@ -223,7 +239,7 @@
     border-radius:20px;
     padding:5px 6px 5px 12px;
     font-size:13px;
-    font-family:'IBM Plex Mono',monospace;
+    font-family:'DM Mono',monospace;
   }
   .option-pill button{
     border:none;
@@ -249,7 +265,7 @@
   }
   .preset-row:last-child{border-bottom:none;}
   .preset-name{font-weight:600;font-size:14px;}
-  .preset-fields{font-size:12px;color:var(--ink-soft);font-family:'IBM Plex Mono',monospace;margin-top:2px;}
+  .preset-fields{font-size:12px;color:var(--ink-soft);font-family:'DM Mono',monospace;margin-top:2px;}
   .preset-actions{display:flex;gap:6px;flex-shrink:0;}
   .footnote{font-size:12px;color:var(--ink-soft);text-align:center;margin-top:28px;line-height:1.6;}
   .footnote a{color:var(--ink-soft);}
@@ -294,8 +310,8 @@
 </script>
 </head>
 <body>
-<div class="home-bar">
-  <a href="https://mollypw.github.io/" aria-label="Back to the mollypw.github.io home page">
+<header class="home-bar">
+  <a href="https://mollypw.com/" aria-label="Back to the mollypw.com home page">
     <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none" stroke="#C9A227" stroke-width="1">
       <g stroke-linecap="round" stroke-linejoin="round">
         <circle cx="119" cy="137" r="99" stroke-width="1.5"></circle>
@@ -307,9 +323,9 @@
     </svg>
     Home
   </a>
-</div>
+</header>
 
-<div class="wrap">
+<main class="wrap">
   <h1>UTM Link Builder</h1>
   <p class="sub">Build campaign links from an approved list of values, so attribution reporting stays clean and consistent.</p>
 
@@ -318,6 +334,7 @@
     <h2><span class="step-num">1</span>Start from a campaign type (optional)</h2>
     <p class="hint">Pick a saved preset to auto-fill the fields below. You can still change anything after.</p>
     <div class="field">
+      <label for="presetSelect">Campaign type preset</label>
       <select id="presetSelect">
         <option value="">— No preset, start blank —</option>
       </select>
@@ -340,23 +357,23 @@
         <select id="sel_source"></select>
       </div>
       <div class="field">
-        <label for="sel_medium"><span class="tag-dot" style="background:var(--success)"></span>Medium <span class="opt">(required)</span></label>
+        <label for="sel_medium"><span class="tag-dot" style="background:var(--steel)"></span>Medium <span class="opt">(required)</span></label>
         <select id="sel_medium"></select>
       </div>
     </div>
 
     <div class="field">
-      <label for="sel_campaign"><span class="tag-dot" style="background:var(--amber)"></span>Campaign <span class="opt">(required)</span></label>
+      <label for="sel_campaign"><span class="tag-dot" style="background:var(--gold)"></span>Campaign <span class="opt">(required)</span></label>
       <select id="sel_campaign"></select>
     </div>
 
     <div class="field">
-      <label for="sel_content"><span class="tag-dot" style="background:var(--purple)"></span>Content / link location <span class="opt">(optional — use this to tell apart multiple links to the same URL, e.g. header-cta vs. footer-link)</span></label>
+      <label for="sel_content"><span class="tag-dot" style="background:var(--teal)"></span>Content / link location <span class="opt">(optional — use this to tell apart multiple links to the same URL, e.g. header-cta vs. footer-link)</span></label>
       <select id="sel_content"></select>
     </div>
 
     <div class="field">
-      <label for="sel_term"><span class="tag-dot" style="background:var(--danger)"></span>Term <span class="opt">(optional — usually just for paid search keywords)</span></label>
+      <label for="sel_term"><span class="tag-dot" style="background:var(--navy-soft)"></span>Term <span class="opt">(optional — usually just for paid search keywords)</span></label>
       <select id="sel_term"></select>
     </div>
 
@@ -394,16 +411,21 @@
   </details>
 
   <p class="footnote">Values are saved in this browser only (localStorage), so they won't automatically appear on another computer or for a teammate unless you're the only one using this copy.</p>
-</div>
+</main>
 
 <script>
 // ---------- Config ----------
+// Per-field identity dots are a small functional exception to the 6-token
+// rule (same reasoning as Print Doctor's dye-channel swatches): they're
+// 8px indicator dots, never body text or a background field, so contrast
+// rules for text don't apply to them. Chip TEXT stays navy everywhere so
+// every chip is AA-safe regardless of which field it belongs to.
 const FIELDS = [
-  {key:'source',   label:'Source',   color:'var(--accent)',  soft:'var(--accent-soft)',  required:true},
-  {key:'medium',   label:'Medium',   color:'var(--success)', soft:'var(--success-soft)', required:true},
-  {key:'campaign', label:'Campaign', color:'var(--amber)',   soft:'var(--amber-soft)',   required:true},
-  {key:'content',  label:'Content',  color:'var(--purple)',  soft:'var(--purple-soft)',  required:false},
-  {key:'term',     label:'Term',     color:'var(--danger)',  soft:'var(--danger-soft)',  required:false},
+  {key:'source',   label:'Source',   color:'var(--navy)',      soft:'rgba(29,53,87,.08)',    required:true},
+  {key:'medium',   label:'Medium',   color:'var(--steel)',     soft:'rgba(69,123,157,.14)',  required:true},
+  {key:'campaign', label:'Campaign', color:'var(--gold)',      soft:'rgba(201,162,39,.16)',  required:true},
+  {key:'content',  label:'Content',  color:'var(--teal)',      soft:'rgba(168,218,220,.35)', required:false},
+  {key:'term',     label:'Term',     color:'var(--navy-soft)', soft:'rgba(29,53,87,.06)',    required:false},
 ];
 
 const DEFAULT_OPTIONS = {
@@ -529,8 +551,8 @@ document.getElementById('generateBtn').addEventListener('click', ()=>{
       const chip = document.createElement('span');
       chip.className = 'chip';
       chip.style.background = f.soft;
-      chip.style.color = f.color;
-      chip.innerHTML = '<b>utm_'+f.key+'</b>=' + values[f.key];
+      chip.style.color = 'var(--navy)';
+      chip.innerHTML = '<span class="tag-dot" style="background:'+f.color+';margin-right:4px;"></span><b>utm_'+f.key+'</b>=' + values[f.key];
       chipsBox.appendChild(chip);
     }
   });

@@ -319,7 +319,7 @@
     <p class="hint">Pick a saved preset to auto-fill the fields below. You can still change anything after.</p>
     <div class="field">
       <select id="presetSelect">
-        <option value="">— No preset, start blank —</option>
+        <option value="">No preset (start blank)</option>
       </select>
     </div>
   </div>
@@ -351,12 +351,12 @@
     </div>
 
     <div class="field">
-      <label for="sel_content"><span class="tag-dot" style="background:var(--purple)"></span>Content / link location <span class="opt">(optional — use this to tell apart multiple links to the same URL, e.g. header-cta vs. footer-link)</span></label>
+      <label for="sel_content"><span class="tag-dot" style="background:var(--purple)"></span>Content / link location <span class="opt">(optional - use this to tell apart multiple links to the same URL, e.g. header-cta vs. footer-link)</span></label>
       <select id="sel_content"></select>
     </div>
 
     <div class="field">
-      <label for="sel_term"><span class="tag-dot" style="background:var(--danger)"></span>Term <span class="opt">(optional — usually just for paid search keywords)</span></label>
+      <label for="sel_term"><span class="tag-dot" style="background:var(--danger)"></span>Term <span class="opt">(optional - usually just for paid search keywords)</span></label>
       <select id="sel_term"></select>
     </div>
 
@@ -419,7 +419,7 @@ const DEFAULT_PRESETS = [
   {name:'Email newsletter',  source:'newsletter', medium:'email', campaign:'', content:'header-cta', term:''}
 ];
 
-// ---------- Storage helpers (plain localStorage — see footnote in UI) ----------
+// ---------- Storage helpers (plain localStorage - see footnote in UI) ----------
 const OPT_KEY = 'utm_builder_options_v1';
 const PRESET_KEY = 'utm_builder_presets_v1';
 
@@ -457,7 +457,7 @@ function renderFieldSelects(){
     const sel = document.getElementById('sel_'+f.key);
     const current = sel.value;
     sel.innerHTML = '';
-    const blankLabel = f.required ? '— choose ' + f.label.toLowerCase() + ' —' : '— none —';
+    const blankLabel = f.required ? 'Choose ' + f.label.toLowerCase() + '…' : 'None';
     sel.appendChild(new Option(blankLabel, ''));
     options[f.key].forEach(v=>{
       sel.appendChild(new Option(v, v));
@@ -469,7 +469,7 @@ function renderFieldSelects(){
 // ---------- Render: preset dropdown ----------
 function renderPresetSelect(){
   const sel = document.getElementById('presetSelect');
-  sel.innerHTML = '<option value="">— No preset, start blank —</option>';
+  sel.innerHTML = '<option value="">No preset (start blank)</option>';
   presets.forEach((p,i)=>{
     sel.appendChild(new Option(p.name, i));
   });
@@ -544,7 +544,7 @@ document.getElementById('copyBtn').addEventListener('click', ()=>{
     const c = document.getElementById('copyConfirm');
     c.classList.add('show');
     setTimeout(()=>c.classList.remove('show'), 1600);
-  }).catch(()=>{ showWarn('Could not copy automatically — select and copy the link text manually.'); });
+  }).catch(()=>{ showWarn('Could not copy automatically - select and copy the link text manually.'); });
 });
 
 // ---------- Save preset ----------

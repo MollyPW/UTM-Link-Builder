@@ -1,8 +1,8 @@
-# UTM Builder — Customization & Team Setup Guide
+# UTM Builder - Customization & Team Setup Guide
 
 This doc covers two separate things:
 
-1. **Customizing** the tool (default values, labels, colors) — no coding experience needed, just editing text in the file.
+1. **Customizing** the tool (default values, labels, colors) - no coding experience needed, just editing text in the file.
 2. **Sharing it with your team** so everyone sees the same saved options and presets, by connecting a free shared database (Supabase).
 
 Do Part 1 first if you want it. Part 2 is optional and only needed if multiple people need to see each other's saved values.
@@ -11,7 +11,7 @@ Do Part 1 first if you want it. Part 2 is optional and only needed if multiple p
 
 ## Part 1: Customizing the tool
 
-Open `utm-builder.html` in any plain text editor (Notepad, TextEdit, VS Code — anything works, just not Word).
+Open `utm-builder.html` in any plain text editor (Notepad, TextEdit, VS Code - anything works, just not Word).
 
 ### 1.1 Change the starting dropdown values
 
@@ -49,10 +49,10 @@ const DEFAULT_PRESETS = [
 ### 1.3 Change the title, colors, or field labels
 
 - Page title: edit the `<h1>UTM Link Builder</h1>` line and the `<title>` tag near the top.
-- Colors: near the top of the `<style>` section, there's a block starting with `:root{`. Each line like `--accent:#2D5BFF;` is one color — replace the hex code with another one.
+- Colors: near the top of the `<style>` section, there's a block starting with `:root{`. Each line like `--accent:#2D5BFF;` is one color - replace the hex code with another one.
 - Field labels (e.g. renaming "Content" to something your team prefers): find the `FIELDS` array near the top of the script, and edit the `label:'Content'` text.
 
-Save the file and reopen it in your browser to see changes — no build step required.
+Save the file and reopen it in your browser to see changes - no build step required.
 
 ---
 
@@ -62,14 +62,14 @@ Right now, everyone who opens this tool has their **own separate** saved options
 
 This takes about 15 minutes. You'll need: a web browser, and a free Supabase account (no credit card required for this).
 
-### Step 1 — Create a Supabase project
+### Step 1 - Create a Supabase project
 
 1. Go to **supabase.com** and sign up (free tier is enough).
 2. Click **New Project**.
 3. Give it a name (e.g. `utm-builder`), set a database password (save it somewhere), pick any region.
 4. Click **Create new project** and wait ~2 minutes for it to finish setting up.
 
-### Step 2 — Create the data table
+### Step 2 - Create the data table
 
 1. In your new project, click **SQL Editor** in the left sidebar.
 2. Click **New query**.
@@ -98,17 +98,17 @@ create policy "Allow anon update" on utm_builder_data
 
 **What this did:** created one table that stores your options list and presets list, and opened it up so the tool can read and write to it.
 
-> ⚠️ **Security note:** these settings let *anyone with your Supabase URL and key* read and write this data — there's no login. That's fine for a small trusted team using an internal tool, but don't use this setup for anything sensitive, and don't publish the keys publicly beyond your team.
+> ⚠️ **Security note:** these settings let *anyone with your Supabase URL and key* read and write this data - there's no login. That's fine for a small trusted team using an internal tool, but don't use this setup for anything sensitive, and don't publish the keys publicly beyond your team.
 
-### Step 3 — Get your connection details
+### Step 3 - Get your connection details
 
 1. In the left sidebar, click the **gear icon (Project Settings)**, then **API**.
 2. You'll see two values you need:
    - **Project URL** (looks like `https://abcdxyz.supabase.co`)
    - **anon public key** (a long string of letters/numbers)
-3. Copy both somewhere handy — you'll paste them into the tool file next.
+3. Copy both somewhere handy - you'll paste them into the tool file next.
 
-### Step 4 — Edit the tool file
+### Step 4 - Edit the tool file
 
 Open `utm-builder.html` in a text editor and make these three changes:
 
@@ -218,9 +218,9 @@ init();
 
 Save the file.
 
-### Step 5 — Every "save" call needs one small tweak
+### Step 5 - Every "save" call needs one small tweak
 
-Anywhere the code calls `saveOptions(...)` or `savePresets(...)` and then immediately re-renders, add the word `await` in front of it, and mark the surrounding function `async`. There are four places — search the file for `saveOptions(options)` and `savePresets(presets)` and add `await` before each:
+Anywhere the code calls `saveOptions(...)` or `savePresets(...)` and then immediately re-renders, add the word `await` in front of it, and mark the surrounding function `async`. There are four places - search the file for `saveOptions(options)` and `savePresets(presets)` and add `await` before each:
 
 - Inside the "remove" button handler in `renderManageOptions()`
 - Inside the "add" button handler (`doAdd`) in `renderManageOptions()`
@@ -245,13 +245,13 @@ rm.addEventListener('click', async ()=>{
 });
 ```
 
-### Step 6 — Test it
+### Step 6 - Test it
 
 1. Open `utm-builder.html` in your browser.
 2. Add a new option or preset.
-3. Open the same file in a **different browser** (or an incognito window). If the value you added shows up there too, it's working — you're now reading from the shared database instead of your own browser.
+3. Open the same file in a **different browser** (or an incognito window). If the value you added shows up there too, it's working - you're now reading from the shared database instead of your own browser.
 
-### Step 7 — Share with your team
+### Step 7 - Share with your team
 
 - If hosting on **GitHub Pages**: push the updated file to your repo, turn on Pages in repo settings, and send your team the Pages URL.
 - Everyone who opens that same URL will now see and edit the same shared list of options and presets.

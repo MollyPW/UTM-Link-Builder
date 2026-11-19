@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Poppins:wght@600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    /* Molly's brand tokens — the only colors this build draws from.
+    /* Molly's brand tokens - the only colors this build draws from.
        See the note above .tag-dot for the one documented functional
        exception (small per-field identity dots). */
     --navy:#1D3557;
@@ -22,7 +22,7 @@
     --gold:#C9A227;
     --white:#FFFFFF;
 
-    /* muted text on the offwhite base (not a white card) — steel fails
+    /* muted text on the offwhite base (not a white card) - steel fails
        AA there, so this is navy at reduced opacity instead of a new hue */
     --navy-soft:rgba(29,53,87,.68);
     --rule:rgba(29,53,87,.16);
@@ -336,7 +336,7 @@
     <div class="field">
       <label for="presetSelect">Campaign type preset</label>
       <select id="presetSelect">
-        <option value="">— No preset, start blank —</option>
+        <option value="">No preset (start blank)</option>
       </select>
     </div>
   </div>
@@ -368,12 +368,12 @@
     </div>
 
     <div class="field">
-      <label for="sel_content"><span class="tag-dot" style="background:var(--teal)"></span>Content / link location <span class="opt">(optional — use this to tell apart multiple links to the same URL, e.g. header-cta vs. footer-link)</span></label>
+      <label for="sel_content"><span class="tag-dot" style="background:var(--teal)"></span>Content / link location <span class="opt">(optional: use this to tell apart multiple links to the same URL, e.g. header-cta vs. footer-link)</span></label>
       <select id="sel_content"></select>
     </div>
 
     <div class="field">
-      <label for="sel_term"><span class="tag-dot" style="background:var(--navy-soft)"></span>Term <span class="opt">(optional — usually just for paid search keywords)</span></label>
+      <label for="sel_term"><span class="tag-dot" style="background:var(--navy-soft)"></span>Term <span class="opt">(optional: usually just for paid search keywords)</span></label>
       <select id="sel_term"></select>
     </div>
 
@@ -410,7 +410,7 @@
     </div>
   </details>
 
-  <p class="footnote">Values are saved in this browser only (localStorage), so they won't automatically appear on another computer or for a teammate unless you're the only one using this copy.</p>
+  <p class="footnote">Values are saved in this browser only (localStorage), so they won't appear on another computer or for a teammate.</p>
 </main>
 
 <script>
@@ -441,7 +441,7 @@ const DEFAULT_PRESETS = [
   {name:'Email newsletter',  source:'newsletter', medium:'email', campaign:'', content:'header-cta', term:''}
 ];
 
-// ---------- Storage helpers (plain localStorage — see footnote in UI) ----------
+// ---------- Storage helpers (plain localStorage - see footnote in UI) ----------
 const OPT_KEY = 'utm_builder_options_v1';
 const PRESET_KEY = 'utm_builder_presets_v1';
 
@@ -479,7 +479,7 @@ function renderFieldSelects(){
     const sel = document.getElementById('sel_'+f.key);
     const current = sel.value;
     sel.innerHTML = '';
-    const blankLabel = f.required ? '— choose ' + f.label.toLowerCase() + ' —' : '— none —';
+    const blankLabel = f.required ? 'Choose ' + f.label.toLowerCase() + '…' : 'None';
     sel.appendChild(new Option(blankLabel, ''));
     options[f.key].forEach(v=>{
       sel.appendChild(new Option(v, v));
@@ -491,7 +491,7 @@ function renderFieldSelects(){
 // ---------- Render: preset dropdown ----------
 function renderPresetSelect(){
   const sel = document.getElementById('presetSelect');
-  sel.innerHTML = '<option value="">— No preset, start blank —</option>';
+  sel.innerHTML = '<option value="">No preset (start blank)</option>';
   presets.forEach((p,i)=>{
     sel.appendChild(new Option(p.name, i));
   });
@@ -566,7 +566,7 @@ document.getElementById('copyBtn').addEventListener('click', ()=>{
     const c = document.getElementById('copyConfirm');
     c.classList.add('show');
     setTimeout(()=>c.classList.remove('show'), 1600);
-  }).catch(()=>{ showWarn('Could not copy automatically — select and copy the link text manually.'); });
+  }).catch(()=>{ showWarn('Could not copy automatically - select and copy the link text manually.'); });
 });
 
 // ---------- Save preset ----------
